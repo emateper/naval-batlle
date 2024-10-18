@@ -1,0 +1,1 @@
+#yo habia pensado que los barcos se definan por el la Casilla, pero tal vez sirve hacerlo al reves por lo que estoy viendo del funcionamiento de esta libreria

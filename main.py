@@ -1,5 +1,6 @@
 import pygame
 import sys
+from Dado import Dado
 
 
 pygame.init()
@@ -7,13 +8,13 @@ pygame.init()
 
 width, height = 600, 600
 screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Matriz 20x20")
+pygame.display.set_caption("Black Industries Naval Battle")
 
 
 black = (0, 0, 0)
 blue = (0, 0, 255)
 white = (255, 255, 255)
-cell_size = width // 20
+cell_size = width // 10
 
 #Clase barcos
 
@@ -32,18 +33,7 @@ class ships:
         pass
     
 ship = ships()    
-ship_position = None
-
-#Clase dado no sabia si declarla como clase
-#Tal vez haya que usar la libreria math para que
-#nos de numeros aleatorios para el dado    
-class dice:
-    def __init__(number) -> None:
-        number ={
-            "1": "Simple attack",
-            "2": "Doble attack",
-            "3": "Triple attack"
-        }      
+ship_position = None    
 
 while True:
     for event in pygame.event.get():
@@ -51,7 +41,7 @@ while True:
             pygame.quit()
             sys.exit()
         
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONDOWN:  #esto esta bien, pero vamos a tener que sacarlo de aca despues.
             mouse_x, mouse_y = event.pos
             col = mouse_x // cell_size
             row = mouse_y // cell_size
@@ -61,13 +51,10 @@ while True:
                              row * cell_size + (cell_size - ship.rect.height) // 2)    
 
    
-    for col in range(20):
-        for row in range(20):
-          
-            if row < 10:  
+        for col in range(10): ##hice una clase aparte para el tablero, creo que va a ser mejor pensarlo asi porque hay que manejar  tableros diferentes, o al menos dos con diferentes visibilidades para cada jugador. Cuando tenga un ratito saco el tablero de aca y lo armo en su archivo.
+            for row in range(10):
+             
                 color = blue
-            else:         
-                color = black
             
             
             pygame.draw.rect(screen, color, (col * cell_size, row * cell_size, cell_size, cell_size))
