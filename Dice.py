@@ -1,6 +1,6 @@
 import random
 
-class Dado:
+class Dice:
     def __init__(self, sides=3):
         self.sides = sides
 

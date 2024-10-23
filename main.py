@@ -1,38 +1,21 @@
 import pygame
 import sys
-from Dado import Dado
-
+from Ships import Ships
+from Board import Board
 
 pygame.init()
-
 
 width, height = 600, 600
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Black Industries Naval Battle")
-
 
 black = (0, 0, 0)
 blue = (0, 0, 255)
 white = (255, 255, 255)
 cell_size = width // 10
 
-#Clase barcos
-
-class ships:
-    def __init__(self):
-        super().__init__()
-        self.image = pygame.Surface((50, 30), pygame.SRCALPHA)  
-        pygame.draw.polygon(self.image, (255, 0, 0), [(0, 30), (25, 0), (50, 30)])  
-        self.rect = self.image.get_rect()
-    
-    def draw(self, surface, pos):
-        self.rect.topleft = pos
-        surface.blit(self.image, self.rect)
-    
-    def attack(self):
-        pass
-    
-ship = ships()    
+tablero = Board(width, height, cell_size)
+ship = Ships()    
 ship_position = None    
 
 while True:
@@ -41,34 +24,39 @@ while True:
             pygame.quit()
             sys.exit()
         
-        if event.type == pygame.MOUSEBUTTONDOWN:  #esto esta bien, pero vamos a tener que sacarlo de aca despues.
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_2:
+                ship.size = 2
+                ship.draw_ship()  # Redibujar el barco con el nuevo tamaño
+            elif event.key == pygame.K_3:
+                ship.size = 3
+                ship.draw_ship()
+            elif event.key == pygame.K_4:
+                ship.size = 4
+                ship.draw_ship()
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = event.pos
             col = mouse_x // cell_size
             row = mouse_y // cell_size
             
-            
-            ship_position = (col * cell_size + (cell_size - ship.rect.width) // 2,
-                             row * cell_size + (cell_size - ship.rect.height) // 2)    
+            # Asegúrate de que el barco quepa en el tablero
+            if 0 <= col < 10 and 0 <= row < 10:
+                # Asegurarte de que no se salga del tablero
+                if col + ship.size <= 10:
+                    ship_position = (
+                        col * cell_size + (cell_size - ship.rect.width) // 2,
+                        row * cell_size + (cell_size - ship.rect.height) // 2
+                    )
+            ship.draw_ship() 
 
-   
-        for col in range(10): ##hice una clase aparte para el tablero, creo que va a ser mejor pensarlo asi porque hay que manejar  tableros diferentes, o al menos dos con diferentes visibilidades para cada jugador. Cuando tenga un ratito saco el tablero de aca y lo armo en su archivo.
-            for row in range(10):
-             
-                color = blue
-            
-            
-            pygame.draw.rect(screen, color, (col * cell_size, row * cell_size, cell_size, cell_size))
+    screen.fill(black)  # Limpia la pantalla
+    tablero.dibujar(screen)  # Llama al método de dibujo del tablero
     
-    # Dibujar bordes negros, se libre en cambiar los colores
-    for row in range(20):
-        pygame.draw.line(screen, white, (0, row * cell_size), (width, row * cell_size), 1)
-    for col in range(20):
-        pygame.draw.line(screen, white, (col * cell_size, 0), (col * cell_size, height), 1)
-
+    # Dibuja el barco si tiene una posición válida
     if ship_position:
         ship.draw(screen, ship_position)
     
-    
-    pygame.display.flip()
+    pygame.display.flip()  # Actualiza la pantalla
 
 pygame.quit()
